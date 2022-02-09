@@ -1,9 +1,10 @@
 import numpy
-import windshield_camera
 
-# Windshield parameters
-n = numpy.array([0.0, -1.0, 1.0])
-n = n / numpy.linalg.norm(n)
+from camera_model import *
+from slab_projection import *
+
+# Slab parameters
+elevation, azimuth = -math.radians(45), 0.0
 tau = 0.006
 nu = 1.55
 
@@ -11,25 +12,24 @@ nu = 1.55
 K = numpy.array([[1200.0, 0.0, 600.0], [0.0, 1200.0, 400.0], [0.0, 0.0, 1.0]])
 r1 = -0.3
 r2 = -0.2
-R = numpy.diag([1.0, 1.0, 1.0])
+rotX, rotY, rotZ = 0.0, 0.0, 0.0
 t = numpy.array([0.0, 0.0, 0.0])
+
+# Camera model
+regular_camera = CameraModel(Pixel(K), RadialDistortion(r1, r2), CentralProjection(), EulerPose(rotX, rotY, rotZ, t))
+exact_slab_camera = CameraModel(Pixel(K), RadialDistortion(r1, r2), ExactSlabProjection(elevation, azimuth, tau, nu),
+                                EulerPose(rotX, rotY, rotZ, t))
+approx_slab_camera = CameraModel(Pixel(K), RadialDistortion(r1, r2),
+                                 ApproximateSlabProjection(elevation, azimuth, tau, nu),
+                                 EulerPose(rotX, rotY, rotZ, t))
 
 # Point to project
 s = numpy.array([0.0, 1.0, 2.0])
-
 # Central projection
-p_central = windshield_camera.generalized_windshield_camera(s, K, windshield_camera.radial_distortions, [r1, r2],
-                                                            windshield_camera.central_projection,
-                                                            [], R, t)
-
+p_central = regular_camera(s)
 # Exact projection
-p_exact = windshield_camera.generalized_windshield_camera(s, K, windshield_camera.radial_distortions, [r1, r2],
-                                                          windshield_camera.exact_windshield_projection,
-                                                          [n, tau, nu], R, t)
-
+p_exact = exact_slab_camera(s)
 # Approximate projection
-p_approx = windshield_camera.generalized_windshield_camera(s, K, windshield_camera.radial_distortions, [r1, r2],
-                                                           windshield_camera.approximate_windshield_projection,
-                                                           [n, tau, nu], R, t)
+p_approx = approx_slab_camera(s)
 
 print(p_central, p_exact, p_approx)
