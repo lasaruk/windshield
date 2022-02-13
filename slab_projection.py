@@ -40,7 +40,7 @@ class ExactSlabProjection:
         w = numpy.dot(n, point)
         wsqr = w * w
         usqr = numpy.dot(point, point) - wsqr
-        # usqr is per construction positive
+        # usqr is per construction positive, so a violation to that can be only a numerical issue
         if usqr < 0.0:
             usqr = 0.0
         tsqr = self.tau * self.tau
@@ -100,6 +100,9 @@ class ApproximateSlabProjection:
         w = numpy.dot(n, point)
         wsqr = w * w
         usqr = numpy.dot(point, point) - wsqr
+        # usqr is per construction positive, so a violation to that can be only a numerical issue
+        if usqr < 0.0:
+            usqr = 0.0
         sigma = self.tau * (1.0 - 1.0 / math.sqrt((self.nu * self.nu - 1.0) * (usqr / wsqr + 1.0) + 1.0))
         return central_projection(point - sigma * n)
 
