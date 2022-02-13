@@ -39,8 +39,10 @@ class ExactSlabProjection:
         n = polar_normal(self.elevation, self.azimuth)
         w = numpy.dot(n, point)
         wsqr = w * w
-        u = math.sqrt(numpy.dot(point, point) - w * w)
-        usqr = u * u
+        usqr = numpy.dot(point, point) - wsqr
+        # usqr is per construction positive
+        if usqr < 0.0:
+            usqr = 0.0
         tsqr = self.tau * self.tau
         nusqr = self.nu * self.nu
         wwpuu = wsqr + usqr
@@ -97,8 +99,7 @@ class ApproximateSlabProjection:
         n = polar_normal(self.elevation, self.azimuth)
         w = numpy.dot(n, point)
         wsqr = w * w
-        u = math.sqrt(numpy.dot(point, point) - wsqr)
-        usqr = u * u
+        usqr = numpy.dot(point, point) - wsqr
         sigma = self.tau * (1.0 - 1.0 / math.sqrt((self.nu * self.nu - 1.0) * (usqr / wsqr + 1.0) + 1.0))
         return central_projection(point - sigma * n)
 

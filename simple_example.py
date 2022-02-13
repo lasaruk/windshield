@@ -1,3 +1,5 @@
+# This example shows a simple application of the slab model
+
 import numpy
 
 from camera_model import *

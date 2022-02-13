@@ -7,4 +7,5 @@ Python code for a generalized pinhole camera model with windshield distortions
 [calibration.py](calibration.py) implements a calibration procedure of the model parameters given 3d-2d associations\
 \
 [simple_example.py](simple_example.py) demonstrates how to use the slab camera model for forward projection\
+[backproject_example.py](backproject_example.py) demonstrates the accuracy of the methods\
 [calibration_example.py](calibration_example.py) demonstrates how to calibrate the camera and the windshield

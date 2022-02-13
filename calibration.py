@@ -23,6 +23,10 @@ class Calibration:
         self.param = self.model.vectorize()
         result = least_squares(lambda x: self.objective(x), self.param, method='lm')
         self.model.unvectorize(result['x'])
+        JtJ = numpy.matmul(result.jac.transpose(), result.jac)
+        D, U = numpy.linalg.eigh(JtJ)
+        for i, (d, v) in enumerate(zip(D, U)):
+            print(i, d, v)
 
     def objective(self, param):
         # Defines the objective function for the calibration

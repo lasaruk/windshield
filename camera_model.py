@@ -29,7 +29,7 @@ def euler_angles(rot_x, rot_y, rot_z):
         [[math.cos(rot_y), 0.0, math.sin(rot_y)], [0.0, 1.0, 0.0], [-math.sin(rot_y), 0.0, math.cos(rot_y)]])
     rot_mat_z = numpy.array(
         [[math.cos(rot_z), math.sin(rot_z), 0.0], [-math.sin(rot_z), math.cos(rot_z), 0.0], [0.0, 0.0, 1.0]])
-    return numpy.matmul(rot_mat_z, numpy.matmul(rot_mat_y, rot_mat_x))
+    return numpy.matmul(-rot_mat_z, numpy.matmul(-rot_mat_y, -rot_mat_x))
 
 
 class Pixel:
